@@ -1,0 +1,27 @@
+#class Api::V1::MerchantsController < ApplicationController
+# def index
+#   # merchants = Merchant.all
+#   # render json: MerchantSerializer.new(merchants)
+#   # require "pry"; binding.pry
+#   merchants = if params[:merchants_per_page]
+#     Merchant.first_20(merchants_per_page)
+#   else
+#     merchants = Merchant.all
+#     render json: MerchantSerializer.new(merchants)
+#   end
+# end
+
+def index
+  paginated = Merchant.all.offset(current_page).limit(per_page)
+  # options = {
+  #             links: {
+  #               first: api_v1_merchants_path(per_page: per_page),
+  #               self: api_v1_merchants_path(page: current_page, per_page: per_page),
+  #               last: api_v1_merchants_path(page: paginated.total_pages, per_page)
+  #             }
+  #           }
+  # paginated = Article.all.page(current_page).per(per_page)
+  # options = PaginationMetaGenerator.new(request: request, total_pages: paginated.total_pages).call()
+       # render json: serializer.new(paginated, options)
+ render json: MerchantSerializer.new(paginated)
+end

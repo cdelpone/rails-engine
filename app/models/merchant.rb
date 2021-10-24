@@ -7,7 +7,4 @@ class Merchant < ApplicationRecord
   has_many :transactions, through: :invoices
   has_many :customers, through: :invoices
 
-  def method_name
-
-  end
 end
