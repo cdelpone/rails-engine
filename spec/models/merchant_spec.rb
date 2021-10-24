@@ -12,11 +12,10 @@ RSpec.describe Merchant, type: :model do
   end
 
   describe 'class methods/scopes' do
-    describe '#first_20' do
+    describe '#method' do
       before :each do
       end
-
-      it 'fetch first page of 20 merchants' do
+      it 'does method' do
       end
     end
   end
