@@ -1,4 +1,5 @@
 class Api::V1::MerchantsController < ApplicationController
+
   def index
     paginated = Merchant.all.offset(current_page).limit(per_page)
     render json: MerchantSerializer.new(paginated)

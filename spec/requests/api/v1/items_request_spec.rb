@@ -2,7 +2,15 @@ require 'rails_helper'
 # rspec spec/requests/api/v1/items_request_spec.rb
 RSpec.describe "Items API" do
   it "happy path, fetch all items if per page is really big" do
-   create_list(:item, 20)
+   # create_list(:item, 20)
+   merchant1 = create :merchant
+   item1 = create :item, { merchant_id: merchant1.id }
+   item2 = create :item, { merchant_id: merchant1.id }
+   item3 = create :item, { merchant_id: merchant1.id }
+
+   merchant2 = create(:merchant)
+   item4 = create :item, { merchant_id: merchant2.id }
+   item5 = create :item, { merchant_id: merchant2.id }
 
     get '/api/v1/items'
 
@@ -10,7 +18,7 @@ RSpec.describe "Items API" do
 
     items = JSON.parse(response.body, symbolize_names: true)
 
-    expect(items[:data].count).to eq(20)
+    expect(items[:data].count).to eq(5)
 
     items[:data].each do |item|
       expect(item.length).to eq(3)
@@ -24,7 +32,7 @@ RSpec.describe "Items API" do
       expect(item[:attributes][:name]).to be_a(String)
     end
 
-    expect(items[:data].count).to eq(20)
+    expect(items[:data].count).to eq(5)
 
     expect(items).to be_a Hash
     expect(items[:data]).to be_an Array
@@ -37,7 +45,7 @@ RSpec.describe "Items API" do
     expect(items[:data][0][:attributes]).to_not have_key :created_at
     expect(items[:data][0][:attributes]).to_not have_key :updated_at
   end
-  # 
+  #
   # it 'happy path, fetch first page of 50 merchants' do
   #   create_list(:merchant, 50)
   #
@@ -118,6 +126,4 @@ RSpec.describe "Items API" do
   #
   #   expect(merchant1[:data]).to have_key(:id)
   # end
-
-
 end
