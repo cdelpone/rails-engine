@@ -9,10 +9,8 @@ RSpec.describe "Merchants API" do
 
     merchants = JSON.parse(response.body, symbolize_names: true)
 
-    expect(merchants[:data].count).to eq(20)
-
     merchants[:data].each do |merchant|
-      expect(merchant.length).to eq(4)
+      expect(merchant.length).to eq(3)
       expect(merchant).to have_key(:id)
       expect(merchant[:id]).to be_an(String)
       expect(merchant).to have_key(:type)
@@ -21,12 +19,8 @@ RSpec.describe "Merchants API" do
       expect(merchant[:attributes]).to be_a(Hash)
       expect(merchant[:attributes]).to have_key(:name)
       expect(merchant[:attributes][:name]).to be_a(String)
-      expect(merchant).to have_key(:relationships)
-      expect(merchant[:relationships]).to be_a(Hash)
     end
-
     expect(merchants[:data].count).to eq(20)
-
     expect(merchants).to be_a Hash
     expect(merchants[:data]).to be_an Array
     expect(merchants[:data][0]).to have_key :id
@@ -37,23 +31,21 @@ RSpec.describe "Merchants API" do
     expect(merchants[:data][0][:attributes][:name]).to be_a String
     expect(merchants[:data][0][:attributes]).to_not have_key :created_at
     expect(merchants[:data][0][:attributes]).to_not have_key :updated_at
-    expect(merchants[:data][0]).to have_key :relationships
-    expect(merchants[:data][0][:relationships]).to_not have_key :items
   end
 
   it 'happy path, fetch first page of 50 merchants' do
-    create_list(:merchant, 50)
+    create_list(:merchant, 100)
 
-    get '/api/v1/merchants?page=1'
+    get '/api/v1/merchants?page=1&per_page=50'
 
     expect(response).to be_successful
 
     merchants = JSON.parse(response.body, symbolize_names: true)
 
-    expect(merchants[:data].length).to eq(20)
+    expect(merchants[:data].length).to eq(50)
   end
 
-  it 'returns empty array when page has no data' do
+  it 'happy path, fetch a page of merchants which would contain no data' do
     get '/api/v1/merchants?page=10'
 
     expect(response).to be_successful
@@ -66,10 +58,6 @@ RSpec.describe "Merchants API" do
 
   it "happy path, fetch one merchant by id" do
     id = create(:merchant).id
-
-    item1 = create :item, { merchant_id: id }
-    item2 = create :item, { merchant_id: id }
-    item3 = create :item, { merchant_id: id }
 
     get "/api/v1/merchants/#{id}"
 
@@ -87,12 +75,6 @@ RSpec.describe "Merchants API" do
 
     expect(merchant[:data]).to have_key(:attributes)
     expect(merchant[:data][:attributes]).to be_a(Hash)
-
-    expect(merchant[:data]).to have_key(:relationships)
-    expect(merchant[:data][:relationships]).to be_a(Hash)
-
-    expect(merchant[:data][:relationships]).to have_key :items
-    expect(merchant[:data][:relationships][:items]).to have_key :data
   end
 
   xit "sad path, bad integer id returns 404" do
@@ -124,18 +106,10 @@ RSpec.describe "Merchants API" do
     expect(merchant_items[:data][0]).to have_key(:id)
     expect(merchant_items[:data].count).to eq(3)
     expect(merchant_items[:data][0]).to have_key(:attributes)
-    # merchant_items[:data].each do |merchant_items|
-    #   expect(merchant.length).to eq(4)
-    #   expect(merchant).to have_key(:id)
-    #   expect(merchant[:id]).to be_an(String)
-    #   expect(merchant).to have_key(:type)
-    #   expect(merchant[:type]).to be_an(String)
-    #   expect(merchant).to have_key(:attributes)
-    #   expect(merchant[:attributes]).to be_a(Hash)
-    #   expect(merchant[:attributes]).to have_key(:name)
-    #   expect(merchant[:attributes][:name]).to be_a(String)
-    #   expect(merchant).to have_key(:relationships)
-    #   expect(merchant[:relationships]).to be_a(Hash)
-    # end
+    expect(merchant_items[:data][0][:attributes]).to have_key(:name)
+    expect(merchant_items[:data][0][:attributes]).to have_key(:description)
+    expect(merchant_items[:data][0][:attributes]).to have_key(:unit_price)
+    expect(merchant_items[:data][0][:attributes]).to have_key(:merchant_id)
+    expect(merchant_items[:data][0][:type]).to eq("item")
   end
 end

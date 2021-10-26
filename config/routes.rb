@@ -4,9 +4,11 @@ Rails.application.routes.draw do
       resources :merchants, only: [:index, :show] do
         resources :items, only: [:index]
       end
-      resources :items, only: [:index, :show] do
-        resources :merchants, only: [:show]
-      end
+      resources :items, except: :delete # do
+        # resources :merchants, only: [:show]
+      # end
+      get '/items/:id/merchant', to: 'merchants#show'
     end
   end
+
 end

@@ -20,7 +20,26 @@ class Api::V1::ItemsController < ApplicationController
     end
   end
 
+  def create
+    item = Item.create!(item_params)
+    render json: ItemSerializer.new(item), status: 201
+  end
+
+  def destroy
+    render json: Item.delete(params[:id])
+  end
+
+  def update
+    item = Item.update(params[:id], item_params)
+    render json: ItemSerializer.new(item), status: 201
+  end
+
 private
+
+def item_params
+  params.require(:item).permit(:name, :description, :unit_price, :merchant_id)
+
+end
 
   def current_page
     if params[:page].to_i <= 1
