@@ -185,34 +185,19 @@ RSpec.describe "Items API" do
 
   it "happy path, fetch one merchant by id (get an items merchant)" do
     merchant = create(:merchant)
-    # merchant2 = create(:merchant)
+
     item = create :item, { merchant_id: merchant.id }
-    # item2 = create :item, { merchant_id: merchant1.id }
-    # item3 = create :item, { merchant_id: merchant1.id }
-
-    # item4 = create :item, { merchant_id: merchant2.id }
-    # item5 = create :item, { merchant_id: merchant2.id }
-
-    # get "/api/v1/items/#{item1.id}"
-    # expect(response).to be_successful
 
     get "/api/v1/items/#{item.id}/merchant"
 
     expect(response).to be_successful
 
-    item = JSON.parse(response.body, symbolize_names: true)
-# require "pry"; binding.pry
-    # expect(item[:data]).to have_key(:id)
-    # expect(item[:data][:id]).to be_a(String)
-    # expect(item1[:data][:type]).to eq("item")
-    # expect(item1[:data][:attributes]).to be_a(Hash)
+    merchant = JSON.parse(response.body, symbolize_names: true)
+
+    expect(merchant[:data]).to have_key(:id)
+    expect(merchant[:data][:id]).to eq(item.merchant_id.to_s)
+    expect(merchant[:data][:id]).to be_a(String)
+    expect(merchant[:data][:type]).to eq("merchant")
+    expect(merchant[:data][:attributes]).to be_a(Hash)
   end
 end
-# merchant1 = create :merchant
-# item1 = create :item, { merchant_id: merchant1.id }
-# item2 = create :item, { merchant_id: merchant1.id }
-# item3 = create :item, { merchant_id: merchant1.id }
-#
-# merchant2 = create(:merchant)
-# item4 = create :item, { merchant_id: merchant2.id }
-# item5 = create :item, { merchant_id: merchant2.id }
