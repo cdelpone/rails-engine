@@ -201,8 +201,7 @@ RSpec.describe "Items API" do
     expect(response).to be_successful
 
     item = JSON.parse(response.body, symbolize_names: true)
-require "pry"; binding.pry
-    Item.first.merchant
+# require "pry"; binding.pry
     # expect(item[:data]).to have_key(:id)
     # expect(item[:data][:id]).to be_a(String)
     # expect(item1[:data][:type]).to eq("item")

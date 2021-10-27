@@ -38,7 +38,6 @@ private
 
 def item_params
   params.require(:item).permit(:name, :description, :unit_price, :merchant_id)
-
 end
 
   def current_page

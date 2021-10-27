@@ -6,9 +6,13 @@ class Api::V1::MerchantsController < ApplicationController
   end
 
   def show
-    # require "pry"; binding.pry
-    merchant = Merchant.find(params[:id])
-    if merchant.present?
+    item = Item.find(params[:id])
+    if item.present?
+      merchant = Merchant.find(item.merchant_id)
+      render json: MerchantSerializer.new(merchant)
+    elsif
+      merchant = Merchant.find(params[:id])
+      merchant.present?
       render json: MerchantSerializer.new(merchant)
     else
       respond_with_errors(object)
@@ -18,12 +22,8 @@ class Api::V1::MerchantsController < ApplicationController
 
 private
 
-  def current_item
-    if params[:item_id].present?
-      item = Item.find(item_id: params[:id])
-      merchant = Merchant.find(params[:merchant_id])
-
-
+  def merchant_params
+    params.require(:merchant).permit(:name)
   end
 
   def current_page
