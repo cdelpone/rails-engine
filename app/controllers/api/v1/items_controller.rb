@@ -14,8 +14,11 @@ class Api::V1::ItemsController < ApplicationController
     item = Item.find(params[:id])
     if item.present?
       render json: ItemSerializer.new(item)
+    elsif params[:search].present?
+      search_items = Item.search_by_name[:search]
+      render json: ItemSerializer.new(search_items)
     else
-      respond_with_errors(object)
+      respond_with_errors(item)
       flash[:error]
     end
   end
@@ -36,9 +39,9 @@ class Api::V1::ItemsController < ApplicationController
 
 private
 
-def item_params
-  params.require(:item).permit(:name, :description, :unit_price, :merchant_id)
-end
+  def item_params
+    params.require(:item).permit(:name, :description, :unit_price, :merchant_id)
+  end
 
   def current_page
     if params[:page].to_i <= 1

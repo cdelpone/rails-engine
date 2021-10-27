@@ -112,4 +112,15 @@ RSpec.describe "Merchants API" do
     expect(merchant_items[:data][0][:attributes]).to have_key(:merchant_id)
     expect(merchant_items[:data][0][:type]).to eq("item")
   end
+
+  it 'can search for all merchants' do
+    merchant = create :merchant, { name: "best name" }
+    merch_name = "best"
+
+    Merchant.search_by_name(merch_name)
+
+    require "pry"; binding.pry
+    get "/api/v1/merchants/find_all?name=#{merch_name}"
+
+  end
 end

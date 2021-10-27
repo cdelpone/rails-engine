@@ -1,26 +1,31 @@
 class Api::V1::MerchantsController < ApplicationController
 
   def index
-    paginated = Merchant.all.offset(current_page*per_page).limit(per_page)
-    render json: MerchantSerializer.new(paginated)
+    if params[:merch_name].present?
+      search_merchant = Merchant.search_by_name(params[:merch_name])
+      render json: MerchantSerializer.new(search_merchant)
+    else
+      paginated = Merchant.all.offset(current_page*per_page).limit(per_page)
+      render json: MerchantSerializer.new(paginated)
+    end
   end
 
   def show
-      if Item.all.blank?
-        merchant = Merchant.find(params[:id])
-        merchant.present?
+    if Item.all.blank?
+      merchant = Merchant.find(params[:id])
+      merchant.present?
+      render json: MerchantSerializer.new(merchant)
+    elsif
+      item = Item.find(params[:id])
+      if item.present?
+        merchant = Merchant.find(item.merchant_id)
         render json: MerchantSerializer.new(merchant)
-      elsif
-        item = Item.find(params[:id])
-        if item.present?
-          merchant = Merchant.find(item.merchant_id)
-          render json: MerchantSerializer.new(merchant)
-        end
-      else
-        respond_with_errors(object)
-        flash[:error]
       end
+    else
+      respond_with_errors(merchant)
+      flash[:error]
     end
+  end
 
 
 private

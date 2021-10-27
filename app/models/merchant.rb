@@ -7,6 +7,10 @@ class Merchant < ApplicationRecord
   has_many :transactions, through: :invoices
   has_many :customers, through: :invoices
 
+  def self.search_by_name(merch_name)
+    "find_all?name=#{merch_name}"
+  end
+
   def self.most_revenue_by_merchant(quanity_params)
     joins(:transactions)
     .select("merchants.*, sum(invoice_items.quantity * invoice_items.unit_price) as revenue")

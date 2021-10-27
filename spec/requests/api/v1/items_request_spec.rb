@@ -206,4 +206,8 @@ RSpec.describe "Items API" do
     expect(merchant[:data][:type]).to eq("merchant")
     expect(merchant[:data][:attributes]).to be_a(Hash)
   end
+
+  it 'can search for one item' do
+    
+  end
 end
