@@ -6,19 +6,22 @@ class Api::V1::MerchantsController < ApplicationController
   end
 
   def show
-    item = Item.find(params[:id])
-    if item.present?
-      merchant = Merchant.find(item.merchant_id)
-      render json: MerchantSerializer.new(merchant)
-    elsif
-      merchant = Merchant.find(params[:id])
-      merchant.present?
-      render json: MerchantSerializer.new(merchant)
-    else
-      respond_with_errors(object)
-      flash[:error]
+      if Item.all.blank?
+        merchant = Merchant.find(params[:id])
+        merchant.present?
+        render json: MerchantSerializer.new(merchant)
+      elsif
+        item = Item.find(params[:id])
+        if item.present?
+          merchant = Merchant.find(item.merchant_id)
+          render json: MerchantSerializer.new(merchant)
+        end
+      else
+        respond_with_errors(object)
+        flash[:error]
+      end
     end
-  end
+
 
 private
 

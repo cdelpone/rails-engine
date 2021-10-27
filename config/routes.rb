@@ -7,7 +7,8 @@ Rails.application.routes.draw do
       resources :items, except: :delete # do
         # resources :merchants, only: [:show]
       # end
-      get '/items/:id/merchant', to: 'merchants#show'
+      get '/merchants/find', to: 'search#search_merchant', as: 'merchants/find'
+      get '/items/find_all', to: 'search#search_items', as: 'items/find_all'
     end
   end
 

@@ -185,8 +185,11 @@ RSpec.describe "Items API" do
 
   it "happy path, fetch one merchant by id (get an items merchant)" do
     merchant = create(:merchant)
-
     item = create :item, { merchant_id: merchant.id }
+    merchant2 = create(:merchant)
+    item2 = create :item, { merchant_id: merchant2.id }
+    item3 = create :item, { merchant_id: merchant2.id }
+    item4 = create :item, { merchant_id: merchant2.id }
 
     get "/api/v1/items/#{item.id}/merchant"
 
@@ -196,6 +199,9 @@ RSpec.describe "Items API" do
 
     expect(merchant[:data]).to have_key(:id)
     expect(merchant[:data][:id]).to eq(item.merchant_id.to_s)
+    expect(merchant[:data][:id]).not_to eq(item2.merchant_id.to_s)
+    expect(merchant[:data][:id]).not_to eq(item3.merchant_id.to_s)
+    expect(merchant[:data][:id]).not_to eq(item4.merchant_id.to_s)
     expect(merchant[:data][:id]).to be_a(String)
     expect(merchant[:data][:type]).to eq("merchant")
     expect(merchant[:data][:attributes]).to be_a(Hash)
