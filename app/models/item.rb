@@ -7,8 +7,5 @@ class Item < ApplicationRecord
   has_many :invoices, through: :invoice_items
   has_many :transactions, through: :invoices
 
-  def self.search_by_name(item_name)
-    "find?name=#{item_name}"
-  end
-
+  scope :search_by_name, ->(name) { where("name ilike ?", "%#{name}%").order(name: :desc).first }
 end

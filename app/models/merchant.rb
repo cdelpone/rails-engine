@@ -7,17 +7,15 @@ class Merchant < ApplicationRecord
   has_many :transactions, through: :invoices
   has_many :customers, through: :invoices
 
-  def self.search_by_name(merch_name)
-    "find_all?name=#{merch_name}"
-  end
+  scope :search_by_name, ->(name) { where("name ilike ?", "%#{name}%").order(name: :desc) }
 
-  def self.most_revenue_by_merchant(quanity_params)
-    joins(:transactions)
-    .select("merchants.*, sum(invoice_items.quantity * invoice_items.unit_price) as revenue")
+  def self.most_revenue_by_merchant(quantity_params)
+    joins(invoices: :transactions)
     .where("transactions.result = ?", "success")
+    .select("merchants.*, SUM(invoice_items.quantity * invoice_items.unit_price) as revenue")
     .where("invoices.status = ?", "shipped")
-    .group("invoices.id")
-    .limit("quanity_params")
+    .group("id")
     .order("revenue desc")
+    .limit(quantity_params)
   end
 end

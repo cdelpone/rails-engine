@@ -119,8 +119,10 @@ RSpec.describe "Merchants API" do
 
     Merchant.search_by_name(merch_name)
 
-    require "pry"; binding.pry
     get "/api/v1/merchants/find_all?name=#{merch_name}"
 
+    expect(response).to be_successful
+
+    merchants = JSON.parse(response.body, symbolize_names: true)
   end
 end
