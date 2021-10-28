@@ -17,10 +17,13 @@ RSpec.describe "Items API" do
 
       item = JSON.parse(response.body, symbolize_names: true)
 
-      expect(Item.search_by_name(search_name)).to eq(item3)
+      expect(item[:data]).to be_a Hash
+      expect(item[:data][:type]).to eq("item")
+      expect(item[:data][:attributes]).to be_a Hash
+      expect(item[:data][:attributes][:name]).to eq(item1.name)
     end
 
-    xit 'sad path, no fragment matched' do
+    it 'sad path, no fragment matched' do
       merchant1 = create(:merchant)
       item1 = create :item, { name: "Best name", merchant_id: merchant1.id }
       item2 = create :item, { name: "The BEST name", merchant_id: merchant1.id }
@@ -34,8 +37,7 @@ RSpec.describe "Items API" do
 
       item = JSON.parse(response.body, symbolize_names: true)
 
-      expect(Item.search_by_name(search_name)).to eq([])
-      expect(Item.search_by_name(search_name).count).to eq(0)
+      expect(response.body).to match("No Items match your search")
     end
   end
 end

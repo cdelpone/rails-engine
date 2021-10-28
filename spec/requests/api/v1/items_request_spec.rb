@@ -20,6 +20,12 @@ RSpec.describe "Items API" do
         expect(item[:attributes]).to be_a(Hash)
         expect(item[:attributes]).to have_key(:name)
         expect(item[:attributes][:name]).to be_a(String)
+        expect(item[:attributes]).to have_key(:description)
+        expect(item[:attributes][:description]).to be_a(String)
+        expect(item[:attributes]).to have_key(:unit_price)
+        expect(item[:attributes][:unit_price]).to be_a(Float)
+        expect(item[:attributes]).to have_key(:merchant_id)
+        expect(item[:attributes][:merchant_id]).to be_an(Integer)
       end
 
       expect(items[:data].count).to eq(100)
@@ -182,10 +188,6 @@ RSpec.describe "Items API" do
   end
 
   context 'Update One Item' do
-    # sad path, bad integer id returns 404
-    # edge case, string id returns 404
-    # happy path, works with only partial data, too
-    # edge case, bad merchant id returns 400 or 404 | AssertionError: expected 201 to be one of [ 400, 404 ]
     it "happy path, fetch one item by id; can update an item" do
       id = create(:item).id
       previous_name = Item.last.name
@@ -199,6 +201,47 @@ RSpec.describe "Items API" do
       expect(response).to be_successful
       expect(item.name).to_not eq(previous_name)
       expect(item.name).to eq("Mr. Kenny Boehm")
+    end
+
+    xit 'happy path, works with only partial data, too' do
+    end
+
+    xit "sad path, bad integer id returns 404" do
+      id = create(:item).id
+      previous_name = Item.last.name
+      item_params = { name: "Mr. Kenny Boehm" }
+      headers = {"CONTENT_TYPE" => "application/json"}
+
+      patch "/api/v1/items/19", headers: headers, params: JSON.generate({item: item_params})
+
+      item = Item.find_by(id: id)
+
+      expect(response).not_to be_successful
+    end
+
+    xit "edge case, string id returns 404" do
+      id = create(:item).id.to_s
+      previous_name = Item.last.name
+      item_params = { name: "Mr. Kenny Boehm" }
+      headers = {"CONTENT_TYPE" => "application/json"}
+
+      patch "/api/v1/items/#{id}", headers: headers, params: JSON.generate({item: item_params})
+
+      item = Item.find_by(id: id)
+
+      expect(response).not_to be_successful
+    end
+
+    xit "edge case, bad merchant id returns 400 or 404" do
+      merchant1 = create(:merchant)
+      item1 = create :item, { merchant_id: merchant1.id.to_s }
+      previous_name = Item.last.name
+      item_params = { name: "Mr. Kenny Boehm" }
+      headers = {"CONTENT_TYPE" => "application/json"}
+
+      patch "/api/v1/items/#{item1.id}", headers: headers, params: JSON.generate({item: item_params})
+
+      expect(response).not_to be_successful
     end
   end
 
@@ -227,16 +270,6 @@ RSpec.describe "Items API" do
       expect(merchant[:data][:id]).to be_a(String)
       expect(merchant[:data][:type]).to eq("merchant")
       expect(merchant[:data][:attributes]).to be_a(Hash)
-    end
-  end
-
-  context 'Get Items with Most Revenue' do
-    # edge case sad path, returns an error of some sort if quantity value is blank | AssertionError: expected 500 to equal 400
-    # edge case sad path, returns an error of some sort if quantity is a string | AssertionError: expected 500 to equal 400
-    # sad path, returns an error of some sort if quantity value is less than 0
-    # happy path, top one item by revenue
-    # happy path, return all items if quantity is too big
-    it 'happy path, fetch top 10 items by revenue' do
     end
   end
 end

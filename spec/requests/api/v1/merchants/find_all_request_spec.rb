@@ -16,8 +16,11 @@ RSpec.describe "Merchants API" do
 
       merchants = JSON.parse(response.body, symbolize_names: true)
 
-      expect(Merchant.search_by_name(search_name)).to eq([merchant3, merchant4, merchant2, merchant1])
-      expect(Merchant.search_by_name(search_name).count).to eq(4)
+      expect(merchants[:data][0]).to be_a Hash
+      expect(merchants[:data][0][:type]).to eq("merchant")
+      expect(merchants[:data][0][:attributes]).to be_a Hash
+      expect(merchants[:data][0][:attributes][:name]).to eq(merchant1.name)
+      expect(merchants[:data][3][:attributes][:name]).to eq(merchant3.name)
     end
 
     it 'sad path, no fragment matched' do
@@ -32,8 +35,7 @@ RSpec.describe "Merchants API" do
 
       merchants = JSON.parse(response.body, symbolize_names: true)
 
-      expect(Merchant.search_by_name(search_name)).to eq([])
-      expect(Merchant.search_by_name(search_name).count).to eq(0)
+      expect(merchants[:data]).to eq([])
     end
   end
 end

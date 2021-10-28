@@ -21,7 +21,7 @@ RSpec.describe Merchant, type: :model do
         merchant5 = create :merchant, { name: "The worst name" }
         search_name = "best"
 
-        expect(Merchant.search_by_name(search_name)).to eq([merchant3, merchant4, merchant2, merchant1])
+        expect(Merchant.search_by_name(search_name)).to eq([merchant1, merchant2, merchant4, merchant3])
         expect(Merchant.search_by_name(search_name).count).to eq(4)
       end
 

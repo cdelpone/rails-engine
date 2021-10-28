@@ -7,7 +7,7 @@ class Merchant < ApplicationRecord
   has_many :transactions, through: :invoices
   has_many :customers, through: :invoices
 
-  scope :search_by_name, ->(name) { where("name ilike ?", "%#{name}%").order(name: :desc) }
+  scope :search_by_name, ->(name) { where("name ilike ?", "%#{name}%").order(name: :asc) }
 
   def self.most_revenue_by_merchant(quantity_params)
     joins(invoices: :transactions)
