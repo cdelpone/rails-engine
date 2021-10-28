@@ -70,6 +70,8 @@ RSpec.describe "Items API" do
       expect(items[:data].length).to eq(20)
       expected = Item.all[0..19].count
       expect(items[:data].count).to eq(expected)
+      expected2 = Item.all[0..19]
+      expect(items[:data][0][:attributes][:name]).to eq(expected2.first.name)
     end
 
     it 'sad path, fetching page 1 if page is 0 or lower' do
@@ -98,7 +100,6 @@ RSpec.describe "Items API" do
   end
 
   context 'Get One Item' do
-    # edge case, string id returns 404
     it "happy path, fetch one item by id" do
       merchant1 = create(:merchant)
       item1 = create :item, { merchant_id: merchant1.id }
@@ -119,6 +120,15 @@ RSpec.describe "Items API" do
     xit "sad path, bad integer id returns 404" do
       merchant1 = create(:merchant)
       item1 = create :item, { merchant_id: merchant1.id }
+
+      get "/api/v1/items/19"
+
+      expect(response).not_to be_successful
+    end
+
+    xit "edge case, string id returns 404" do
+      merchant1 = create(:merchant)
+      item1 = create :item, { merchant_id: merchant1.id.to_s }
 
       get "/api/v1/items/19"
 

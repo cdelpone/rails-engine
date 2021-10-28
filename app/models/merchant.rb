@@ -12,7 +12,7 @@ class Merchant < ApplicationRecord
   def self.most_revenue_by_merchant(quantity_params)
     joins(invoices: :transactions)
     .where("result = ?", "success")
-    .select("merchants.*, SUM(invoice_items.quantity * invoice_items.unit_price) AS revenue")
+    .select("merchants.*, SUM(invoice_items.quantity * invoice_items.unit_price) as revenue")
     .group(:id)
     .order("revenue DESC")
     .limit(quantity_params)
