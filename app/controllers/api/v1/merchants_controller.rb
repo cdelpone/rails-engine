@@ -22,6 +22,10 @@ class Api::V1::MerchantsController < ApplicationController
     end
   end
 
+  def most_items
+
+  end
+
 
 private
 
