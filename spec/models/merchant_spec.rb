@@ -12,9 +12,19 @@ RSpec.describe Merchant, type: :model do
   end
 
   describe 'class methods/scopes' do
-    describe '#method' do
-      before :each do
+    describe 'search_by_name' do
+      it 'does method' do
       end
+    end
+    describe 'most_revenue_by_merchant' do
+      it 'does method' do
+      end
+    end
+    describe 'total_revenue' do
+      it 'does method' do
+      end
+    end
+    describe 'most_items_sold' do
       it 'does method' do
       end
     end

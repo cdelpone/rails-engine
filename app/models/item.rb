@@ -9,7 +9,7 @@ class Item < ApplicationRecord
 
   scope :search_by_name, ->(name) { where("name ilike ?", "%#{name}%").order(name: :desc).first }
 
-  def self.ranked_by_revenue(quantity_params)
+  def self.most_revenue_by_item(quantity_params)
     joins(invoices: :transactions)
     .where("result = ?", "success")
     .select("items.*, SUM(invoice_items.quantity * invoice_items.unit_price) AS revenue")

@@ -16,7 +16,7 @@ Rails.application.routes.draw do
         get 'find', to: 'find#index'
       end
       resources :items, except: :delete
-      get 'items/:id/merchant', to: 'merchants#show'
+      get 'items/:id/merchant', to: 'items_merchant#show'
     end
   end
 end

@@ -9,4 +9,15 @@ RSpec.describe Item, type: :model do
 
     it { should validate_presence_of :name }
   end
+
+  describe 'class methods/scopes' do
+    describe 'search_by_name' do
+      it 'does method' do
+      end
+    end
+    describe 'most_revenue_by_item' do
+      it 'does method' do
+      end
+    end
+  end
 end

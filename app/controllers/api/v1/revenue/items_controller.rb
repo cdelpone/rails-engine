@@ -2,7 +2,7 @@ class Api::V1::Revenue::ItemsController < ApplicationController
   before_action :default_params
 
   def index
-    items = Item.ranked_by_revenue(params[:quantity])
+    items = Item.most_revenue_by_item(params[:quantity])
     render json: ItemRevenueSerializer.new(items)
   end
 
