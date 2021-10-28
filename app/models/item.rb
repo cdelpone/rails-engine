@@ -7,7 +7,12 @@ class Item < ApplicationRecord
   has_many :invoices, through: :invoice_items
   has_many :transactions, through: :invoices
 
-  scope :search_by_name, ->(name) { where("name ilike ?", "%#{name}%").order(name: :desc).first }
+  # scope :search_by_name, ->(name) { where("name ilike ?", "%#{name}%").order(name: :asc).first }
+  def self.search_by_name(name)
+      where("name ilike ?", "%#{name}%")
+     .order(name: :asc)
+     .first
+   end
 
   def self.most_revenue_by_item(quantity_params)
     joins(invoices: :transactions)
