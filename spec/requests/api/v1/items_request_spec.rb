@@ -230,13 +230,6 @@ RSpec.describe "Items API" do
     end
   end
 
-  context 'Find One Item by Name Fragment' do
-    # sad path, no fragment matched | AssertionError: expected [ Array(2483) ] to be an object
-    it 'happy path, fetch one item by fragment' do
-
-    end
-  end
-
   context 'Get Items with Most Revenue' do
     # edge case sad path, returns an error of some sort if quantity value is blank | AssertionError: expected 500 to equal 400
     # edge case sad path, returns an error of some sort if quantity is a string | AssertionError: expected 500 to equal 400

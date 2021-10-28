@@ -14,12 +14,9 @@ class Api::V1::ItemsController < ApplicationController
     item = Item.find(params[:id])
     if item.present?
       render json: ItemSerializer.new(item)
-    elsif params[:search].present?
+    else params[:search].present?
       search_items = Item.search_by_name[:search]
       render json: ItemSerializer.new(search_items)
-    else
-      respond_with_errors(item)
-      flash[:error]
     end
   end
 
@@ -34,7 +31,7 @@ class Api::V1::ItemsController < ApplicationController
 
   def update
     item = Item.update(params[:id], item_params)
-    render json: ItemSerializer.new(item), status: 201
+    render json: ItemSerializer.new(item)
   end
 
 private

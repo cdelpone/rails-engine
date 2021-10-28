@@ -16,15 +16,7 @@ class Merchant < ApplicationRecord
     .group(:id)
     .order("revenue DESC")
     .limit(quantity_params)
-  end
-
-  def self.total_revenue(merchant)
-    joins(invoices: :transactions)
-    .where("result = ?", "success")
-    .where(id: merchant)
-    .select("merchants.*, SUM(invoice_items.quantity * invoice_items.unit_price) AS revenue")
-    .group(:id)
-    .first
+    .distinct
   end
 
   def self.most_items_sold(quantity_params)
@@ -34,5 +26,14 @@ class Merchant < ApplicationRecord
     .group(:id)
     .order("count DESC")
     .limit(quantity_params)
+  end
+
+  def self.total_revenue(merchant)
+    joins(invoices: :transactions)
+    .where("result = ?", "success")
+    .where(id: merchant)
+    .select("merchants.*, SUM(invoice_items.quantity * invoice_items.unit_price) AS revenue")
+    .group(:id)
+    .first
   end
 end
