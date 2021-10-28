@@ -56,7 +56,8 @@ RSpec.describe "Items API" do
     let!(:inv_item11) do # 6, 150 200
       create :invoice_item, { invoice_id: invoice1.id, item_id: item11.id, unit_price: 150, quantity: 1 }
     end
-    it 'happy path, fetch top 10 items by revenue' do
+
+    it 'happy path, by default, fetch top 10 items by revenue' do
       get '/api/v1/revenue/items'
 
       expect(response).to be_successful
@@ -77,6 +78,33 @@ RSpec.describe "Items API" do
       expect(items[:data][0][:attributes][:revenue]).to eq(1000.0)
       expect(items[:data][9][:attributes][:revenue]).to eq(100.0)
     end
+
+    it 'happy path, fetch top 20 items by revenue' do
+      create_list(:item, 9)
+
+      quantity_params = 20
+
+      get "/api/v1/revenue/items?quantity=#{quantity_params}"
+
+      expect(response).to be_successful
+
+      items = JSON.parse(response.body, symbolize_names: true)
+
+      expect(Item.all.count).to eq(20)
+      expect(items[:data][0]).to be_a Hash
+      expect(items[:data][0]).to have_key :id
+      expect(items[:data][0]).to have_key :type
+      expect(items[:data][0][:type]).to eq("item_revenue")
+      expect(items[:data][0]).to have_key :attributes
+      expect(items[:data][0][:attributes]).to be_a Hash
+      expect(items[:data][0][:attributes]).to have_key :name
+      expect(items[:data][0][:attributes][:name]).to be_a String
+      expect(items[:data][0][:attributes]).to have_key :revenue
+      expect(items[:data][0][:attributes][:revenue]).to be_a Float
+      expect(items[:data][0][:attributes][:revenue]).to eq(1000.0)
+      expect(items[:data][9][:attributes][:revenue]).to eq(100.0)
+    end
+
     it 'happy path, top one item by revenue' do
       get '/api/v1/revenue/items'
 
@@ -89,13 +117,46 @@ RSpec.describe "Items API" do
 
       expect(expected).to be(true)
     end
+
     it 'happy path, return all items if quantity is too big' do
+      create_list(:item, 500)
+
+      quantity_params = 500000
+
+      get "/api/v1/revenue/items?quantity=#{quantity_params}"
+
+      expect(response).to be_successful
+
+      items = JSON.parse(response.body, symbolize_names: true)
+
+      expect(Item.all.count).to eq(511)
     end
-    it 'sad path, returns an error of some sort if quantity value is less than 0' do
+
+    xit 'sad path, returns an error of some sort if quantity value is less than 0' do
+      quantity_params = 0.5
+      get "/api/v1/revenue/items?quantity=#{quantity_params}"
+
+      expect(response).to be_successful
+
+      items = JSON.parse(response.body, symbolize_names: true)
     end
-    it 'edge case sad path, returns an error of some sort if quantity value is blank | AssertionError: expected 500 to equal 400' do
+
+    xit 'edge case sad path, returns an error of some sort if quantity value is blank | AssertionError: expected 500 to equal 400' do
+      quantity_params = ""
+      get "/api/v1/revenue/items?quantity=#{quantity_params}"
+
+      expect(response).to be_successful
+
+      items = JSON.parse(response.body, symbolize_names: true)
     end
-    it 'edge case sad path, returns an error of some sort if quantity is a string | AssertionError: expected 500 to equal 400' do
+
+    xit 'edge case sad path, returns an error of some sort if quantity is a string | AssertionError: expected 500 to equal 400' do
+      quantity_params = "acbkjd"
+      get "/api/v1/revenue/items?quantity=#{quantity_params}"
+
+      expect(response).to be_successful
+
+      items = JSON.parse(response.body, symbolize_names: true)
     end
   end
 end
