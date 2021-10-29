@@ -1,14 +1,18 @@
 class Api::V1::Merchants::MostItemsController < ApplicationController
-  before_action :default_params
+  # before_action :default_params
 
   def index
-    merchants = Merchant.most_items_sold(params[:quantity])
-    render json: ItemsSoldSerializer.new(merchants)
+    if params[:quantity].present?
+      merchants = Merchant.most_items_sold(params[:quantity] ||= 5)
+      render json: ItemsSoldSerializer.new(merchants)
+    else
+      raise ActionController::BadRequest
+    end
   end
-
-  private
-
-  def default_params
-    params[:quantity] ||= 5
-  end
+  # 
+  # private
+  #
+  # def default_params
+  #   params[:quantity] ||= 5
+  # end
 end
