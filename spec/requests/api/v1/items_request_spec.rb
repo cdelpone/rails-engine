@@ -137,6 +137,7 @@ RSpec.describe "Items API" do
       item1 = create :item, { merchant_id: merchant1.id.to_s }
 
       get "/api/v1/items/sfdg"
+
       expect(response.code).to eq("404")
       expect(response).not_to be_successful
     end
@@ -203,10 +204,10 @@ RSpec.describe "Items API" do
       expect(item.name).to eq("Mr. Kenny Boehm")
     end
 
-    xit 'happy path, works with only partial data, too' do
-    end
+    # xit 'happy path, works with only partial data, too' do
+    # end
 
-    xit "sad path, bad integer id returns 404" do
+    it "sad path, bad integer id returns 404" do
       id = create(:item).id
       previous_name = Item.last.name
       item_params = { name: "Mr. Kenny Boehm" }
@@ -216,31 +217,34 @@ RSpec.describe "Items API" do
 
       item = Item.find_by(id: id)
 
+      expect(response.code).to eq("404")
       expect(response).not_to be_successful
     end
 
-    xit "edge case, string id returns 404" do
+    it "edge case, string id returns 404" do
       id = create(:item).id.to_s
       previous_name = Item.last.name
       item_params = { name: "Mr. Kenny Boehm" }
       headers = {"CONTENT_TYPE" => "application/json"}
 
-      patch "/api/v1/items/#{id}", headers: headers, params: JSON.generate({item: item_params})
+      patch "/api/v1/items/asrfgdh", headers: headers, params: JSON.generate({item: item_params})
 
       item = Item.find_by(id: id)
 
+      expect(response.code).to eq("404")
       expect(response).not_to be_successful
     end
 
     xit "edge case, bad merchant id returns 400 or 404" do
-      merchant1 = create(:merchant)
-      item1 = create :item, { merchant_id: merchant1.id.to_s }
+      merchant1_id = create(:merchant).id.to_s
+      item1 = create :item, { merchant_id: merchant1_id }
       previous_name = Item.last.name
       item_params = { name: "Mr. Kenny Boehm" }
       headers = {"CONTENT_TYPE" => "application/json"}
 
       patch "/api/v1/items/#{item1.id}", headers: headers, params: JSON.generate({item: item_params})
 
+      expect(response.code).to eq("404")
       expect(response).not_to be_successful
     end
   end
