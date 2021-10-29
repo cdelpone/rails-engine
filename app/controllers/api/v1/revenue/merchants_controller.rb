@@ -12,11 +12,6 @@ class Api::V1::Revenue::MerchantsController < ApplicationController
       render json: MerchantRevenueSerializer.new(merchant)
     else
       render json: { error: 'Bad Request' }, status: :not_found
-      # raise ActionController::RecordNotFound
-      # render json: { data: {
-      #   message: 'Bad id',
-      #   status: :not_found
-      #   } }
     end
   end
 end

@@ -123,21 +123,21 @@ RSpec.describe "Items API" do
       expect(item3[:data]).to eq(nil)
     end
 
-    xit "sad path, bad integer id returns 404" do
+    it "sad path, bad integer id returns 404" do
       merchant1 = create(:merchant)
       item1 = create :item, { merchant_id: merchant1.id }
 
       get "/api/v1/items/19"
-
+      expect(response.code).to eq("404")
       expect(response).not_to be_successful
     end
 
-    xit "edge case, string id returns 404" do
+    it "edge case, string id returns 404" do
       merchant1 = create(:merchant)
       item1 = create :item, { merchant_id: merchant1.id.to_s }
 
-      get "/api/v1/items/19"
-
+      get "/api/v1/items/sfdg"
+      expect(response.code).to eq("404")
       expect(response).not_to be_successful
     end
   end

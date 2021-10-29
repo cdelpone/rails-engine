@@ -143,7 +143,7 @@ RSpec.describe "Merchants API" do
       expect(merchant[:data][:attributes][:revenue]).to eq(950.0)
     end
 
-    xit "sad path, bad integer id returns 404" do
+    it "sad path, bad integer id returns 404" do
       get "/api/v1/revenue/merchants/asdfg"
 
       expect(response.code).to eq("404")

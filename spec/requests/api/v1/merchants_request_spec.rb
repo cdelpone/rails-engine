@@ -125,7 +125,7 @@ RSpec.describe "Merchants API" do
       expect(merchant[:data][:attributes][:name]).not_to eq(merchant2.name)
     end
 
-    xit "sad path, bad integer id returns 404" do
+    it "sad path, bad integer id returns 404" do
       id = create(:merchant).id
 
       get "/api/v1/merchants/19"
@@ -164,7 +164,7 @@ RSpec.describe "Merchants API" do
       expect(merchant_items[:data][0][:attributes][:name]).not_to eq(item4.name)
     end
 
-    xit "sad path, bad integer id returns 404" do
+    it "sad path, bad integer id returns 404" do
       id = create(:merchant).id
 
       get "/api/v1/merchants/157/items"
